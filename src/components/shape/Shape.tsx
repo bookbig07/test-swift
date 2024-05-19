@@ -26,6 +26,16 @@ function Shape() {
         setShapeRowOne(newShapeRowOne);
         setShapeRowTwo(newShapeRowTwo);
     };
+
+    const swapShapes = () => {
+        const indexOne = Math.floor(Math.random() * shapeRowOne.length);
+        const indexTwo = Math.floor(Math.random() * shapeRowTwo.length);
+        const temp = shapeRowOne[indexOne];
+        shapeRowOne[indexOne] = shapeRowTwo[indexTwo];
+        shapeRowTwo[indexTwo] = temp;
+        setShapeRowOne([...shapeRowOne]);
+        setShapeRowTwo([...shapeRowTwo]);
+    };
       
     const movePosition = () => {
         setIsSwapped(!isSwapped);
@@ -66,14 +76,14 @@ function Shape() {
                 <div className="card-shape">
                     <div className={"row" + (!isSwapped ? " justify-end" : "")}>
                         {shapeRowOne.map((box, index) => (
-                            <div className="row-shape" key={index}>
+                            <div className="row-shape" key={index} onClick={swapShapes}>
                                 <div className={"shape-type " + box}></div>
                             </div>
                         ))}
                     </div>
                     <div className={"row" + (isSwapped ? " justify-end" : "")}>
                         {shapeRowTwo.map((box, index) => (
-                            <div className="row-shape" key={index}>
+                            <div className="row-shape" key={index} onClick={swapShapes}>
                                 <div className={"shape-type " + box}></div>
                             </div>
                         ))}
