@@ -2,5 +2,7 @@
     "test_one": "Test 1",
     "test_position": "Position customization",
     "test_two": "Test 2",
-    "test_form": "input for information"
+    "test_form": "input for information",
+    "move_shape": "Move shape",
+    "move_position": "Move position"
 }
