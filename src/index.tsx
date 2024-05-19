@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import './translation/translation'
 import HomePage from './components/home/HomePage';
 import Shape from './components/shape/Shape';
+import Form from './components/form/Form';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: '/shape',
     element: <Shape/>
+  },
+  {
+    path: '/form',
+    element: <Form/>
   }
 ])
 
