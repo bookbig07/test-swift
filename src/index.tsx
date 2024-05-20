@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import './translation/translation'
 import HomePage from './components/home/HomePage';
 import Shape from './components/shape/Shape';
-import Form from './components/form/Form';
+import Form from './components/form/FormPage';
+import store from './components/form/FormStore';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -31,7 +33,9 @@ document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
 
