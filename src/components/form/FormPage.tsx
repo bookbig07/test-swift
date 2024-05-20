@@ -1,11 +1,11 @@
 import React , { useState , useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table , Form , Input , Select , DatePicker , Radio , Button , Checkbox } from 'antd';
+import { Table , Form , Input , Select , DatePicker , Radio , Button , Checkbox , Modal } from 'antd';
 import './FormPage.scss';
 import Translation from '../translation/Translation'
 import { useTranslation } from 'react-i18next';
 import { TableFormData } from './FormData'
-import { addFormData , loadFormData , deleteFormData , loadDataFromLocalStorage } from './FormSlice';
+import { addFormData , loadFormData , deleteFormData , updateFormData , loadDataFromLocalStorage } from './FormSlice';
 import type { CheckboxProps } from 'antd';
 import moment from 'moment';
 
@@ -17,8 +17,11 @@ interface RootState {
   
 function FormPage() {
     const [form] = Form.useForm();
+    const [editform] = Form.useForm();
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [editDataRow, setisEditRow] = useState<TableFormData>();
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [checkAll, setCheckAll] = useState<boolean>(false);
     const tableForm = useSelector((state: RootState) => state.form.TableForm);
@@ -58,9 +61,24 @@ function FormPage() {
         setCheckAll(!checkAll)
     }
 
-    const EditFormData = (key : React.Key) => {
-        console.log(key)
+    const EditFormData = (key: React.Key) => {
+        setIsModalOpen(true);
+        const rowToEdit = tableForm.find(value => value.key === key);
+        setisEditRow(rowToEdit);
     }
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+        const editedData = editform.getFieldsValue();
+        editedData.key = editDataRow?.key;
+        dispatch(updateFormData(editedData as TableFormData));
+        setisEditRow(undefined);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+        setisEditRow(undefined);
+    };
 
     const rowSelection = {
         selectedRowKeys,
@@ -72,7 +90,7 @@ function FormPage() {
             title: t("name"),
             dataIndex: 'name',
             key: 'name',
-            render: (_: any, record: TableFormData) => `${record.prefixName} ${record.firstName} ${record.lastName}`,
+            render: (_: any, record: TableFormData) => `${t(record.prefixName)} ${record.firstName} ${record.lastName}`,
             sorter: (a: TableFormData, b: TableFormData) => {
                 const nameA = `${a.prefixName} ${a.firstName} ${a.lastName}`;
                 const nameB = `${b.prefixName} ${b.firstName} ${b.lastName}`;
@@ -83,6 +101,7 @@ function FormPage() {
             title: t('sex'),
             dataIndex: 'sex',
             key: 'sex',
+            render: (_: any, record: TableFormData) => `${t(record.sex)}`,
             sorter: (a: TableFormData, b: TableFormData) => a.sex.localeCompare(b.sex),
         },
         {
@@ -100,6 +119,7 @@ function FormPage() {
             title: t("nationality"),
             dataIndex: 'nationality',
             key: 'nationality',
+            render: (_: any, record: TableFormData) => `${t('nationality_' +record.nationality)}`,
             sorter: (a: TableFormData, b: TableFormData) => a.nationality.localeCompare(b.nationality),
         },
         {
@@ -205,7 +225,7 @@ function FormPage() {
                             </Form.Item>
                         </div>
                         <div className="row">
-                            <Form.Item key="prefixphonenumber" name="prefixphonenumber" label={t('phonenumber')}style={{width : '280px', marginRight : '10px'}} rules={[{ required: true }]}>
+                            <Form.Item key="prefixphonenumber" name="prefixphonenumber" label={t('phonenumber')} style={{width : '280px', marginRight : '10px'}} rules={[{ required: true }]}>
                                 <Select>
                                     <Select.Option value="66">+66</Select.Option>
                                 </Select>
@@ -244,6 +264,54 @@ function FormPage() {
                     <Table rowSelection={rowSelection} columns={columns} dataSource={tableForm}></Table>
                 </div>
             </div>
+            <Modal title={`Edit Index ${editDataRow?.key.toString()}`} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <Form form={editform} initialValues={editDataRow}>
+                    <Form.Item name="prefixName" label={t('prefixName')}>
+                        <Select placeholder={t('prefixName')}>
+                            <Select.Option value="mr">{t('mr')}</Select.Option>
+                            <Select.Option value="mrs">{t('mrs')}</Select.Option>
+                            <Select.Option value="miss">{t('miss')}</Select.Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name="firstName" label={t('firstName')}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="lastName" label={t('lastName')}>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item key="nationality" name="nationality" label={t('nationality')}>
+                        <Select 
+                            placeholder={t('select')}
+                        >
+                            <Select.Option value="thai">{t('nationality_thai')}</Select.Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name="idcard" label={t('idcard')}>
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item key="sex" name="sex" label={t('sex')}>
+                        <Radio.Group>
+                            <Radio value={'male'}>{t('male')}</Radio>
+                            <Radio value={'female'}>{t('female')}</Radio>
+                            <Radio value={'notspecified'}>{t('notspecified')}</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+                    <Form.Item key="prefixphonenumber" name="prefixphonenumber" label={t('prefixphonenumber')} style={{ textAlign : 'center'}}>
+                        <Select>
+                            <Select.Option value="66">+66</Select.Option>
+                        </Select>
+                    </Form.Item>
+                        <Form.Item name="phonenumber" label={t('phonenumber')}>
+                        <Input maxLength={9} style={{ textAlign : 'center'}}/>
+                    </Form.Item>
+                    <Form.Item name="passport" label={t('passport')}>
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item name="salary" label={t('salary')}>
+                        <Input/>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </>
     )
 }

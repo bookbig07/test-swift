@@ -22,6 +22,7 @@
     "female" : "Female",
     "notspecified" : "Not specified",
     "phonenumber" : "Mobile phone number",
+    "prefixphonenumber" : "Prefix phone number ",
     "passport" : "Passport",
     "salary" : "Expected Salary",
     "cleardata" : "Clear Data",

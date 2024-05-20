@@ -22,6 +22,7 @@
     "female" : "ผู้หญิง",
     "notspecified" : "ไม่ระบุ",
     "phonenumber" : "หมายเลขโทรศัพท์มือถือ",
+    "prefixphonenumber" : "หมายเลขโทรศัพท์นำหน้า",
     "passport" : "หนังสือเดินทาง",
     "salary" : "เงินเดือนที่คาดหวัง",
     "cleardata" : "ล้างข้อมูล",
