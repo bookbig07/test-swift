@@ -5,7 +5,7 @@ import './FormPage.scss';
 import Translation from '../translation/Translation'
 import { useTranslation } from 'react-i18next';
 import { TableFormData } from './FormData'
-import { addFormData , loadFormData , loadDataFromLocalStorage } from './FormSlice';
+import { addFormData , loadFormData , deleteFormData , loadDataFromLocalStorage } from './FormSlice';
 import type { CheckboxProps } from 'antd';
 import moment from 'moment';
 
@@ -53,8 +53,13 @@ function FormPage() {
 
     const handleDeleteData = () => {
         selectedRowKeys.forEach(key => {
-            console.log(key)
+            dispatch(deleteFormData({ key }));
         });
+        setCheckAll(!checkAll)
+    }
+
+    const EditFormData = (key : React.Key) => {
+        console.log(key)
     }
 
     const rowSelection = {
@@ -64,7 +69,7 @@ function FormPage() {
 
     const columns = [
         {
-            title: 'ชื่อ',
+            title: t("name"),
             dataIndex: 'name',
             key: 'name',
             render: (_: any, record: TableFormData) => `${record.prefixName} ${record.firstName} ${record.lastName}`,
@@ -75,13 +80,13 @@ function FormPage() {
             },
         },
         {
-            title: 'เพศ',
+            title: t('sex'),
             dataIndex: 'sex',
             key: 'sex',
             sorter: (a: TableFormData, b: TableFormData) => a.sex.localeCompare(b.sex),
         },
         {
-            title: 'หมายเลขโทรศัพท์มือถือ',
+            title: t("phonenumber"),
             dataIndex: 'phonenumber',
             key: 'phonenumber',
             render: (_: any, record: TableFormData) => `+${record.prefixphonenumber} ${record.phonenumber}`,
@@ -92,13 +97,16 @@ function FormPage() {
             },
         },
         {
-            title: 'สัญชาติ',
+            title: t("nationality"),
             dataIndex: 'nationality',
             key: 'nationality',
             sorter: (a: TableFormData, b: TableFormData) => a.nationality.localeCompare(b.nationality),
         },
         {
-            title: 'สัญชาติ'
+            title: t("manage"),
+            render: (_: any, record: TableFormData) => (
+                <Button onClick={() => EditFormData(record.key)}>{t('edit')}</Button>
+            ),
         }
     ]
     
@@ -227,11 +235,11 @@ function FormPage() {
                 <div className="table-data">
                     <div className="table-top">
                         <Form.Item>
-                            <Checkbox onChange={handleCheckAllChange}>
-                                เลือกทั้งหมด
+                            <Checkbox onChange={handleCheckAllChange} checked={checkAll}>
+                                {t("selectall")}
                             </Checkbox>
                         </Form.Item>
-                        <Button onClick={handleDeleteData}>ลบข้อมูล</Button>
+                        <Button onClick={handleDeleteData}>{t("delete")}</Button>
                     </div>
                     <Table rowSelection={rowSelection} columns={columns} dataSource={tableForm}></Table>
                 </div>

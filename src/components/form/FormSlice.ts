@@ -17,8 +17,10 @@ const formSlice = createSlice({
             state.TableForm.push(action.payload);
             saveFormData(state.TableForm)
         },
-        deleteFormData(state, action: PayloadAction<{ key: React.Key; status: string }>) {
-
+        deleteFormData(state, action: PayloadAction<{ key: React.Key }>) {
+            const { key } = action.payload;
+            state.TableForm = state.TableForm.filter(item => item.key !== key);
+            saveFormData(state.TableForm);
         },
         loadFormData(state, action: PayloadAction<TableFormData[]>) {
             if (action.payload.length > 0) {
@@ -38,5 +40,5 @@ export const saveFormData = (Form: any) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(Form));
 };
 
-export const { addFormData , loadFormData } = formSlice.actions;
+export const { addFormData , loadFormData , deleteFormData } = formSlice.actions;
 export default formSlice.reducer;

@@ -25,5 +25,10 @@
     "passport" : "Passport",
     "salary" : "Expected Salary",
     "cleardata" : "Clear Data",
-    "sendData" : "Send Data"
+    "sendData" : "Send Data",
+    "name" : "Name",
+    "manage": "Manage",
+    "selectall" : "Select all",
+    "delete" : "Delete Data",
+    "edit" : "Edit Data"
 }
